@@ -3653,7 +3653,7 @@ C
       IF(EPS .GE. 0.0  .OR.  NDEG .EQ. MAXDEG) GO TO 36
       NDER = 0
       DO 35 I = 1,M
-        CALL DP1VLU (NDEG,NDER,X(I),R(I),YP,A)
+C       CALL DP1VLU (NDEG,NDER,X(I),R(I),YP,A)
  35     CONTINUE
  36   EPS = DSQRT(SIG/XM)
  37   RETURN
