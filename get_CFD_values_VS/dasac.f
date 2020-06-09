@@ -763,7 +763,8 @@ C-----------------------------------------------------------------------
 C*****precision > double
       IMPLICIT DOUBLE PRECISION(A-H,O-Z), INTEGER(I-N)
 C*****END precision > double
-      EXTERNAL RES,JAC
+      EXTERNAL RES
+C     EXTERNAL JAC
       DIMENSION Y(*), YPRIME(*), DELTA(*), WT(*), E(*)
       DIMENSION WM(*), IWM(*), RPAR(*), IPAR(*), DTEM(*)
       COMMON/DDA001/NPD,NTEMP,
@@ -779,7 +780,7 @@ C
 100   LENPD=NEQ*NEQ
       DO 110 I=1,LENPD
 110      WM(NPDM1+I)=0.0D0
-      CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
+C     CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
       GO TO 230
 C
 C     Dense finite-difference-generated matrix.
@@ -828,7 +829,7 @@ C
 400   LENPD=(2*IWM(LML)+IWM(LMU)+1)*NEQ
       DO 410 I=1,LENPD
 410      WM(NPDM1+I)=0.0D0
-      CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
+C     CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
       MEBAND=2*IWM(LML)+IWM(LMU)+1
       GO TO 550
 C
@@ -1529,7 +1530,8 @@ C*****END precision > double
       LOGICAL CONVGD
       DIMENSION Y(*), YPRIME(*), WT(*), PHI(NEQ,*), DELTA(*), E(*)
       DIMENSION WM(*), IWM(*), RPAR(*), IPAR(*) ,DTEM(NEQ)
-      EXTERNAL RES,JAC
+      EXTERNAL RES
+C     EXTERNAL JAC
       COMMON/DDA001/NPD,NTEMP,
      *  LML,LMU,LMXORD,LMTYPE,
      *  LNST,LNRE,LNJE,LETF,LCTF,LIPVT
