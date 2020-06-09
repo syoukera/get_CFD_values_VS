@@ -1526,7 +1526,7 @@ C*****precision > double
 C*****END precision > double
       LOGICAL CONVGD
       DIMENSION Y(*), YPRIME(*), WT(*), PHI(NEQ,*), DELTA(*), E(*)
-      DIMENSION WM(*), IWM(*), RPAR(*), IPAR(*)
+      DIMENSION WM(*), IWM(*), RPAR(*), IPAR(*) ,DTEM(NEQ)
       EXTERNAL RES,JAC
       COMMON/DDA001/NPD,NTEMP,
      *  LML,LMU,LMXORD,LMTYPE,
