@@ -8766,6 +8766,66 @@ C
       RETURN
       END
 C
+      SUBROUTINE CKXNUM_S (LINE, NEXP, LOUT, NVAL, RVAL, KERR)
+C
+C  START PROLOGUE
+C
+C  SKWNUM for scholer type rval (T, TLIM, DELT, TIME,,,)
+C  Added by Akira Shioyoke in 2020/06/08
+C
+C*****precision > double
+        IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+C*****END precision > double
+C*****precision > single
+C        IMPLICIT REAL (A-H, O-Z), INTEGER (I-N)
+C*****END precision > single
+C
+      CHARACTER LINE*(*), ITEMP*80
+      DIMENSION RTEMP(80)
+      LOGICAL KERR
+C
+C----------Find Comment String (! signifies comment)
+C
+      ILEN = IPPLEN(LINE)
+      NVAL = 0
+      KERR = .FALSE.
+C
+      IF (ILEN .LE. 0) RETURN
+      IF (ILEN .GT. 80) THEN
+         WRITE (LOUT,*)     ' Error in CKXNUM...line length > 80 '
+         WRITE (LOUT,'(A)') LINE
+         KERR = .TRUE.
+         RETURN
+      ENDIF
+C
+      ITEMP = LINE(:ILEN)
+      IF (NEXP .LT. 0) THEN
+         CALL IPPARR (ITEMP, -1, NEXP, RTEMP, NVAL, IERR, LOUT)
+      ELSE
+         CALL IPPARR (ITEMP, -1, -NEXP, RTEMP, NVAL, IERR, LOUT)
+         IF (IERR .EQ. 1) THEN
+            WRITE (LOUT, *)    ' Syntax errors in CKXNUM...'
+            WRITE (LOUT,'(A)') LINE
+            KERR = .TRUE.
+         ELSEIF (NVAL .NE. NEXP) THEN
+            WRITE (LOUT,*) ' Error in CKXNUM...'
+            WRITE (LOUT,'(A)') LINE
+            KERR = .TRUE.
+            WRITE (LOUT,*) NEXP,' values expected, ',
+     1                     NVAL,' values found.'
+         ENDIF
+      ENDIF
+      IF (NVAL .LE. ABS(NEXP)) THEN
+         DO 20 N = 1, NVAL
+            RVAL = RTEMP(N)
+   20    CONTINUE
+      ENDIF
+C
+      RETURN
+      END
+C
+C----------------------------------------------------------------------C
+C
 C----------------------------------------------------------------------C
 C
       SUBROUTINE CKXTCP (P, T, X, ICKWRK, RCKWRK, C)
