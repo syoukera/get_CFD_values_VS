@@ -2462,6 +2462,7 @@ C*****precision > double
         IMPLICIT DOUBLE PRECISION(A-H,O-Z), INTEGER(I-N)
 C*****END precision > double
         DIMENSION Y(*), YPRIME(*), DELTA(*), EMAT(NSYS,*)
+        DIMENSION RPAR(*), IPAR(*)
         COMMON/DDA002/INDEX,NALG,IDFDP,ICALC,NPAR
         INP1=INDEX+1
         GO TO (10,10,20)INP1
