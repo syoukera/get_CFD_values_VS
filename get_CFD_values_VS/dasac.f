@@ -175,7 +175,7 @@ C     Check hmax.
 C
       IF(INFO(7).EQ.0)GO TO 70
          HMAX=RWORK(LHMAX)
-         IF(HMAX.LE.0.0E0)GO TO 710
+         IF(HMAX.LE.0.0D0)GO TO 710
 70    CONTINUE
 C
 C     Initialize counters.
@@ -203,13 +203,13 @@ C     is a fatal error.
 C
       CALL XERRDA(
      *49HDASSL--  THE LAST STEP TERMINATED WITH A NEGATIVE,
-     *49,201,0,0,0,0,0,0.0E0,0.0E0)
+     *49,201,0,0,0,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *47HDASSL--  VALUE (=I1) OF IDID AND NO APPROPRIATE,
-     *47,202,0,1,IDID,0,0,0.0E0,0.0E0)
+     *47,202,0,1,IDID,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *41HDASSL--  ACTION WAS TAKEN. RUN TERMINATED,
-     *41,203,1,0,0,0,0,0.0E0,0.0e0)
+     *41,203,1,0,0,0,0,0.0D0,0.0D0)
       RETURN
 110   CONTINUE
       IWORK(LNSTL)=IWORK(LNST)
@@ -226,9 +226,9 @@ C-----------------------------------------------------------------------
       DO 210 I=1,NEQ
          IF(INFO(2).EQ.1)RTOLI=RTOL(I)
          IF(INFO(2).EQ.1)ATOLI=ATOL(I)
-         IF(RTOLI.GT.0.0E0.OR.ATOLI.GT.0.0E0)NZFLG=1
-         IF(RTOLI.LT.0.0E0)GO TO 706
-         IF(ATOLI.LT.0.0E0)GO TO 707
+         IF(RTOLI.GT.0.0D0.OR.ATOLI.GT.0.0D0)NZFLG=1
+         IF(RTOLI.LT.0.0D0)GO TO 706
+         IF(ATOLI.LT.0.0D0)GO TO 707
 210      CONTINUE
       IF(NZFLG.EQ.0)GO TO 708
 C
@@ -257,7 +257,7 @@ C     Set error weight vector wt.
 C
       CALL DDAWTS(NEQ,INFO(2),RTOL,ATOL,Y,RWORK(LWT),RPAR,IPAR)
       DO 305 I = 1,NEQ
-         IF(RWORK(LWT+I-1).LE.0.0E0) GO TO 713
+         IF(RWORK(LWT+I-1).LE.0.0D0) GO TO 713
 305      CONTINUE
 C
 C     Compute unit roundoff and hmin.
@@ -275,8 +275,8 @@ C     Check ho, if this was input.
 C
       IF (INFO(8) .EQ. 0) GO TO 310
          HO = RWORK(LH)
-         IF ((TOUT - T)*HO .LT. 0.0E0) GO TO 711
-         IF (HO .EQ. 0.0E0) GO TO 712
+         IF ((TOUT - T)*HO .LT. 0.0D0) GO TO 711
+         IF (HO .EQ. 0.0D0) GO TO 712
          GO TO 320
 310    CONTINUE
 C
@@ -298,9 +298,9 @@ C     Compute tstop, if applicable.
 C
 330   IF (INFO(4) .EQ. 0) GO TO 340
          TSTOP = RWORK(LTSTOP)
-         IF ((TSTOP - T)*HO .LT. 0.0E0) GO TO 715
-         IF ((T + HO - TSTOP)*HO .GT. 0.0E0) HO = TSTOP - T
-         IF ((TSTOP - TOUT)*HO .LT. 0.0E0) GO TO 709
+         IF ((TSTOP - T)*HO .LT. 0.0D0) GO TO 715
+         IF ((T + HO - TSTOP)*HO .GT. 0.0D0) HO = TSTOP - T
+         IF ((TSTOP - TOUT)*HO .LT. 0.0D0) GO TO 709
 C
 C     Compute initial derivative, if applicable.
 C
@@ -338,18 +338,18 @@ C-------------------------------------------------------
          IF(RH .GT. 1.0E0) H = H/RH
 410   CONTINUE
       IF(T .EQ. TOUT) GO TO 719
-      IF((T - TOUT)*H .GT. 0.0E0) GO TO 711
+      IF((T - TOUT)*H .GT. 0.0D0) GO TO 711
       IF(INFO(4) .EQ. 1) GO TO 430
       IF(INFO(3) .EQ. 1) GO TO 420
-      IF((TN-TOUT)*H.LT.0.0E0)GO TO 490
+      IF((TN-TOUT)*H.LT.0.0D0)GO TO 490
       CALL DDATRP(TN,TOUT,Y,YPRIME,NEQ,IWORK(LKOLD),
      *  RWORK(LPHI),RWORK(LPSI))
       T=TOUT
       IDID = 3
       DONE = .TRUE.
       GO TO 490
-420   IF((TN-T)*H .LE. 0.0E0) GO TO 490
-      IF((TN - TOUT)*H .GT. 0.0E0) GO TO 425
+420   IF((TN-T)*H .LE. 0.0D0) GO TO 490
+      IF((TN - TOUT)*H .GT. 0.0D0) GO TO 425
       CALL DDATRP(TN,TN,Y,YPRIME,NEQ,IWORK(LKOLD),
      *  RWORK(LPHI),RWORK(LPSI))
       T = TN
@@ -365,9 +365,9 @@ C-------------------------------------------------------
       GO TO 490
 430   IF(INFO(3) .EQ. 1) GO TO 440
       TSTOP=RWORK(LTSTOP)
-      IF((TN-TSTOP)*H.GT.0.0E0) GO TO 715
-      IF((TSTOP-TOUT)*H.LT.0.0E0)GO TO 709
-      IF((TN-TOUT)*H.LT.0.0E0)GO TO 450
+      IF((TN-TSTOP)*H.GT.0.0D0) GO TO 715
+      IF((TSTOP-TOUT)*H.LT.0.0D0)GO TO 709
+      IF((TN-TOUT)*H.LT.0.0D0)GO TO 450
       CALL DDATRP(TN,TOUT,Y,YPRIME,NEQ,IWORK(LKOLD),
      *   RWORK(LPHI),RWORK(LPSI))
       T=TOUT
@@ -375,10 +375,10 @@ C-------------------------------------------------------
       DONE = .TRUE.
       GO TO 490
 440   TSTOP = RWORK(LTSTOP)
-      IF((TN-TSTOP)*H .GT. 0.0E0) GO TO 715
-      IF((TSTOP-TOUT)*H .LT. 0.0E0) GO TO 709
-      IF((TN-T)*H .LE. 0.0E0) GO TO 450
-      IF((TN - TOUT)*H .GT. 0.0E0) GO TO 445
+      IF((TN-TSTOP)*H .GT. 0.0D0) GO TO 715
+      IF((TSTOP-TOUT)*H .LT. 0.0D0) GO TO 709
+      IF((TN-T)*H .LE. 0.0D0) GO TO 450
+      IF((TN - TOUT)*H .GT. 0.0D0) GO TO 445
       CALL DDATRP(TN,TN,Y,YPRIME,NEQ,IWORK(LKOLD),
      *  RWORK(LPHI),RWORK(LPSI))
       T = TN
@@ -396,14 +396,14 @@ C-------------------------------------------------------
 C
 C     Check whether we are with in roundoff of tstop.
 C
-      IF(ABS(TN-TSTOP).GT.100.0E0*UROUND*
+      IF(ABS(TN-TSTOP).GT.100.0D0*UROUND*
      *   (ABS(TN)+ABS(H)))GO TO 460
       IDID=2
       T=TSTOP
       DONE = .TRUE.
       GO TO 490
 460   TNEXT=TN+H*(1.0E0+4.0E0*UROUND)
-      IF((TNEXT-TSTOP)*H.LE.0.0E0)GO TO 490
+      IF((TNEXT-TSTOP)*H.LE.0.0D0)GO TO 490
       H=(TSTOP-TN)*(1.0E0-4.0E0*UROUND)
       RWORK(LH)=H
 490   IF (DONE) GO TO 590
@@ -435,7 +435,7 @@ C
 510   CALL DDAWTS(NEQ,INFO(2),RTOL,ATOL,RWORK(LPHI),
      *  RWORK(LWT),RPAR,IPAR)
       DO 520 I=1,NEQ
-         IF(RWORK(I+LWT-1).GT.0.0E0)GO TO 520
+         IF(RWORK(I+LWT-1).GT.0.0D0)GO TO 520
            IDID=-3
            GO TO 527
 520   CONTINUE
@@ -443,7 +443,7 @@ C
 C     Test for too much accuracy requested.
 C
       R=DDANRM(NEQ,RWORK(LPHI),RWORK(LWT),RPAR,IPAR)*
-     *   100.0E0*UROUND
+     *   100.0D0*UROUND
       IF(R.LE.1.0E0)GO TO 525
 C
 C     Multiply rtol and atol by r and return.
@@ -483,13 +483,13 @@ C--------------------------------------------------------
 C
       IF(INFO(4).NE.0)GO TO 540
            IF(INFO(3).NE.0)GO TO 530
-             IF((TN-TOUT)*H.LT.0.0E0)GO TO 500
+             IF((TN-TOUT)*H.LT.0.0D0)GO TO 500
              CALL DDATRP(TN,TOUT,Y,YPRIME,NEQ,
      *         IWORK(LKOLD),RWORK(LPHI),RWORK(LPSI))
              IDID=3
              T=TOUT
              GO TO 580
-530          IF((TN-TOUT)*H.GE.0.0E0)GO TO 535
+530          IF((TN-TOUT)*H.GE.0.0D0)GO TO 535
              T=TN
              IDID=1
              GO TO 580
@@ -499,23 +499,23 @@ C
              T=TOUT
              GO TO 580
 540   IF(INFO(3).NE.0)GO TO 550
-      IF((TN-TOUT)*H.LT.0.0E0)GO TO 542
+      IF((TN-TOUT)*H.LT.0.0D0)GO TO 542
          CALL DDATRP(TN,TOUT,Y,YPRIME,NEQ,
      *     IWORK(LKOLD),RWORK(LPHI),RWORK(LPSI))
          T=TOUT
          IDID=3
          GO TO 580
-542   IF(ABS(TN-TSTOP).LE.100.0E0*UROUND*
+542   IF(ABS(TN-TSTOP).LE.100.0D0*UROUND*
      *   (ABS(TN)+ABS(H)))GO TO 545
       TNEXT=TN+H*(1.0E0+4.0E0*UROUND)
-      IF((TNEXT-TSTOP)*H.LE.0.0E0)GO TO 500
+      IF((TNEXT-TSTOP)*H.LE.0.0D0)GO TO 500
       H=(TSTOP-TN)*(1.0E0-4.0E0*UROUND)
       GO TO 500
 545   IDID=2
       T=TSTOP
       GO TO 580
-550   IF((TN-TOUT)*H.GE.0.0E0)GO TO 555
-      IF(ABS(TN-TSTOP).LE.100.0E0*UROUND*(ABS(TN)+ABS(H)))GO TO 552
+550   IF((TN-TOUT)*H.GE.0.0D0)GO TO 555
+      IF(ABS(TN-TSTOP).LE.100.0D0*UROUND*(ABS(TN)+ABS(H)))GO TO 552
       T=TN
       IDID=1
       GO TO 580
@@ -549,31 +549,31 @@ C     reaching tout.
 C
 610   CALL XERRDA(
      *38HDASSL--  AT CURRENT T (=R1)  500 STEPS,
-     *38,610,0,0,0,0,1,TN,0.0E0)
+     *38,610,0,0,0,0,1,TN,0.0D0)
       CALL XERRDA(48HDASSL--  TAKEN ON THIS CALL BEFORE REACHING TOUT,
-     *48,611,0,0,0,0,0,0.0E0,0.0E0)
+     *48,611,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Tolerances too small for machine precision.
 C
 620   CALL XERRDA(
      *47HDASSL--  AT T (=R1) TOO MUCH ACCURACY REQUESTED,
-     *47,620,0,0,0,0,1,TN,0.0E0)
+     *47,620,0,0,0,0,1,TN,0.0D0)
       CALL XERRDA(
      *48HDASSL--  FOR PRECISION OF MACHINE. RTOL AND ATOL,
-     *48,621,0,0,0,0,0,0.0E0,0.0E0)
+     *48,621,0,0,0,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *45HDASSL--  WERE INCREASED TO APPROPRIATE VALUES,
-     *45,622,0,0,0,0,0,0.0E0,0.0E0)
+     *45,622,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
-C     wt(i) .le. 0.0E0 for some i (not at start of problem).
+C     wt(i) .le. 0.0D0 for some i (not at start of problem).
 C
 630   CALL XERRDA(
      *38HDASSL--  AT T (=R1) SOME ELEMENT OF WT,
-     *38,630,0,0,0,0,1,TN,0.0E0)
+     *38,630,0,0,0,0,1,TN,0.0D0)
       CALL XERRDA(28HDASSL--  HAS BECOME .LE. 0.0,
-     *28,631,0,0,0,0,0,0.0E0,0.0E0)
+     *28,631,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Error test failed repeatedly or with h=hmin.
@@ -583,7 +583,7 @@ C
      *44,640,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *57HDASSL--  ERROR TEST FAILED REPEATEDLY OR WITH ABS(H)=HMIN,
-     *57,641,0,0,0,0,0,0.0E0,0.0E0)
+     *57,641,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Corrector convergence failed repeatedly or with h=hmin.
@@ -593,10 +593,10 @@ C
      *44,650,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *48HDASSL--  CORRECTOR FAILED TO CONVERGE REPEATEDLY,
-     *48,651,0,0,0,0,0,0.0E0,0.0E0)
+     *48,651,0,0,0,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *28HDASSL--  OR WITH ABS(H)=HMIN,
-     *28,652,0,0,0,0,0,0.0E0,0.0E0)
+     *28,652,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     The iteration matrix is singular.
@@ -606,7 +606,7 @@ C
      *44,660,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *37HDASSL--  ITERATION MATRIX IS SINGULAR,
-     *37,661,0,0,0,0,0,0.0E0,0.0E0)
+     *37,661,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Corrector failure preceeded by error test failures.
@@ -616,10 +616,10 @@ C
      *44,670,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *49HDASSL--  CORRECTOR COULD NOT CONVERGE.  ALSO, THE,
-     *49,671,0,0,0,0,0,0.0E0,0.0E0)
+     *49,671,0,0,0,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *38HDASSL--  ERROR TEST FAILED REPEATEDLY.,
-     *38,672,0,0,0,0,0,0.0E0,0.0E0)
+     *38,672,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Corrector failure because ires = -1.
@@ -629,10 +629,10 @@ C
      *44,675,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *45HDASSL--  CORRECTOR COULD NOT CONVERGE BECAUSE,
-     *455,676,0,0,0,0,0,0.0E0,0.0E0)
+     *455,676,0,0,0,0,0,0.0D0,0.0D0)
       CALL XERRDA(
      *36HDASSL--  IRES WAS EQUAL TO MINUS ONE,
-     *36,677,0,0,0,0,0,0.0E0,0.0E0)
+     *36,677,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     Failure because ires = -2.
@@ -642,7 +642,7 @@ C
      *40,680,0,0,0,0,2,TN,H)
       CALL XERRDA(
      *36HDASSL--  IRES WAS EQUAL TO MINUS TWO,
-     *36,681,0,0,0,0,0,0.0E0,0.0E0)
+     *36,681,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 C
 C     DDAINI subroutine failed to compute initial yprime.
@@ -652,7 +652,7 @@ C
      *44,685,0,0,0,0,2,TN,HO)
       CALL XERRDA(
      *45HDASSL--  INITIAL YPRIME COULD NOT BE COMPUTED,
-     *45,686,0,0,0,0,0,0.0E0,0.0E0)
+     *45,686,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 690
 690   CONTINUE
       INFO(1)=-1
@@ -669,53 +669,53 @@ C     succession, execution is terminated.
 C-----------------------------------------------------------------------
 701   CALL XERRDA(
      *55HDASSL--  SOME ELEMENT OF INFO VECTOR IS NOT ZERO OR ONE,
-     *55,1,0,0,0,0,0,0.0E0,0.0E0)
+     *55,1,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 702   CALL XERRDA(25HDASSL--  NEQ (=I1) .LE. 0,
-     *25,2,0,1,NEQ,0,0,0.0E0,0.0E0)
+     *25,2,0,1,NEQ,0,0,0.0D0,0.0D0)
       GO TO 750
 703   CALL XERRDA(34HDASSL--  MAXORD (=I1) NOT IN RANGE,
-     *34,3,0,1,MXORD,0,0,0.0E0,0.0E0)
+     *34,3,0,1,MXORD,0,0,0.0D0,0.0D0)
       GO TO 750
 704   CALL XERRDA(
      *60HDASSL--  RWORK LENGTH NEEDED, LENRW (=I1), EXCEEDS LRW (=I2),
-     *60,4,0,2,LENRW,LRW,0,0.0E0,0.0E0)
+     *60,4,0,2,LENRW,LRW,0,0.0D0,0.0D0)
       GO TO 750
 7045  CALL XERRDA(
      *60HDASSL--  SWORK LENGTH NEEDED, LENSW (=I1), EXCEEDS LSW (=I2),
-     *60,4,0,2,LENSW,LSW,0,0.0E0,0.0E0)
+     *60,4,0,2,LENSW,LSW,0,0.0D0,0.0D0)
       GO TO 750
 705   CALL XERRDA(
      *60HDASSL--  IWORK LENGTH NEEDED, LENIW (=I1), EXCEEDS LIW (=I2),
-     *60,5,0,2,LENIW,LIW,0,0.0E0,0.0E0)
+     *60,5,0,2,LENIW,LIW,0,0.0D0,0.0D0)
       GO TO 750
 706   CALL XERRDA(
      *39HDASSL--  SOME ELEMENT OF RTOL IS .LT. 0,
-     *39,6,0,0,0,0,0,0.0E0,0.0E0)
+     *39,6,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 707   CALL XERRDA(
      *39HDASSL--  SOME ELEMENT OF ATOL IS .LT. 0,
-     *39,7,0,0,0,0,0,0.0E0,0.0E0)
+     *39,7,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 708   CALL XERRDA(
      *47HDASSL--  ALL ELEMENTS OF RTOL AND ATOL ARE ZERO,
-     *47,8,0,0,0,0,0,0.0E0,0.0E0)
+     *47,8,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 709   CALL XERRDA(
      *54HDASSL--  INFO(4) = 1 AND TSTOP (=R1) BEHIND TOUT (=R2),
      *54,9,0,0,0,0,2,TSTOP,TOUT)
       GO TO 750
 710   CALL XERRDA(28HDASSL--  HMAX (=R1) .LT. 0.0,
-     *28,10,0,0,0,0,1,HMAX,0.0E0)
+     *28,10,0,0,0,0,1,HMAX,0.0D0)
       GO TO 750
 711   CALL XERRDA(34HDASSL--  TOUT (=R1) BEHIND T (=R2),
      *34,11,0,0,0,0,2,TOUT,T)
       GO TO 750
 712   CALL XERRDA(29HDASSL--  INFO(8)=1 AND H0=0.0,
-     *29,12,0,0,0,0,0,0.0E0,0.0E0)
+     *29,12,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 713   CALL XERRDA(39HDASSL--  SOME ELEMENT OF WT IS .LE. 0.0,
-     *39,13,0,0,0,0,0,0.0E0,0.0E0)
+     *39,13,0,0,0,0,0,0.0D0,0.0D0)
       GO TO 750
 714   CALL XERRDA(
      *61HDASSL--  TOUT (=R1) TOO CLOSE TO T (=R2) TO START INTEGRATION,
@@ -727,11 +727,11 @@ C-----------------------------------------------------------------------
       GO TO 750
 717   CALL XERRDA(
      *52HDASSL--  ML (=I1) ILLEGAL. EITHER .LT. 0 OR .GT. NEQ,
-     *52,17,0,1,IWORK(LML),0,0,0.0E0,0.0E0)
+     *52,17,0,1,IWORK(LML),0,0,0.0D0,0.0D0)
       GO TO 750
 718   CALL XERRDA(
      *52HDASSL--  MU (=I1) ILLEGAL. EITHER .LT. 0 OR .GT. NEQ,
-     *52,18,0,1,IWORK(LMU),0,0,0.0E0,0.0E0)
+     *52,18,0,1,IWORK(LMU),0,0,0.0D0,0.0D0)
       GO TO 750
 719   CALL XERRDA(
      *39HDASSL--  TOUT (=R1) IS EQUAL TO T (=R2),
@@ -743,10 +743,10 @@ C-----------------------------------------------------------------------
       RETURN
 760   CALL XERRDA(
      *46HDASSL--  REPEATED OCCURRENCES OF ILLEGAL INPUT,
-     *46,801,0,0,0,0,0,0.0E0,0.0E0)
+     *46,801,0,0,0,0,0,0.0D0,0.0D0)
 770   CALL XERRDA(
      *47HDASSL--  RUN TERMINATED. APPARENT INFINITE LOOP,
-     *47,802,1,0,0,0,0,0.0E0,0.0E0)
+     *47,802,1,0,0,0,0,0.0D0,0.0D0)
       RETURN
       END
       SUBROUTINE DDAJAC(NEQ,X,Y,YPRIME,DELTA,CJ,H,DTEM,
@@ -777,7 +777,7 @@ C     Dense user-supplied matrix.
 C
 100   LENPD=NEQ*NEQ
       DO 110 I=1,LENPD
-110      WM(NPDM1+I)=0.0E0
+110      WM(NPDM1+I)=0.0D0
       CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
       GO TO 230
 C
@@ -826,7 +826,7 @@ C     Banded user-supplied matrix.
 C
 400   LENPD=(2*IWM(LML)+IWM(LMU)+1)*NEQ
       DO 410 I=1,LENPD
-410      WM(NPDM1+I)=0.0E0
+410      WM(NPDM1+I)=0.0D0
       CALL JAC(X,Y,YPRIME,WM(NPD),CJ,RPAR,IPAR)
       MEBAND=2*IWM(LML)+IWM(LMU)+1
       GO TO 550
@@ -924,7 +924,7 @@ C*****END precision > double
       COMMON/DDA002/INDEX,NALG,IDFDP,ICALC,NPAR
       DATA MAXIT/4/
       DATA XRATE/0.25E0/
-      DATA ZERO/0.0E0/, PT25/0.25E0/, PT5/0.5E0/, PT9/0.9E0/
+      DATA ZERO/0.0D0/, PT25/0.25E0/, PT5/0.5E0/, PT9/0.9E0/
 C-----------------------------------------------------------------------
 C     Block 1.
 C     Initialize. On the first call,set
@@ -948,7 +948,7 @@ C
       IWM(LCTF) = 0
       K=1
       KOLD=0
-      HOLD=0.0E0
+      HOLD=0.0D0
       JSTART=1
       PSI(1)=H
       CJOLD = 1.0E0/H
@@ -976,7 +976,7 @@ C-----------------------------------------------------------------------
       BETA(1)=1.0E0
       ALPHA(1)=1.0E0
       TEMP1=H
-      GAMMA(1)=0.0E0
+      GAMMA(1)=0.0D0
       SIGMA(1)=1.0E0
       DO 210 I=2,KP1
          TEMP2=PSI(I-1)
@@ -989,8 +989,8 @@ C-----------------------------------------------------------------------
 210      CONTINUE
       PSI(KP1)=TEMP1
 230   CONTINUE
-      ALPHAS = 0.0E0
-      ALPHA0 = 0.0E0
+      ALPHAS = 0.0D0
+      ALPHA0 = 0.0D0
       DO 240 I = 1,K
         ALPHAS = ALPHAS - 1.0E0/DFLOAT(I)
         ALPHA0 = ALPHA0 - ALPHA(I)
@@ -1036,7 +1036,7 @@ C
 300   CONTINUE
       DO 310 I=1,NEQ
          Y(I)=PHI(I,1)
-310      YPRIME(I)=0.0E0
+310      YPRIME(I)=0.0D0
       DO 330 J=2,KP1
          DO 320 I=1,NEQ
             Y(I)=Y(I)+PHI(I,J)
@@ -1076,7 +1076,7 @@ C     Initialize the error accumulation vector e.
 C
 340   CONTINUE
       DO 345 I=1,NEQ
-345      E(I)=0.0E0
+345      E(I)=0.0D0
       S = 100.E0
 C
 C     Corrector loop.
@@ -1533,7 +1533,7 @@ C*****END precision > double
      *  LNST,LNRE,LNJE,LETF,LCTF,LIPVT
       DATA MAXIT/10/,MJAC/5/
       DATA DAMP/0.75E0/
-      DATA ZERO/0.0E0/, PT5/0.5E0/, PT1/0.1E0/
+      DATA ZERO/0.0D0/, PT5/0.5E0/, PT1/0.1E0/
 C---------------------------------------------------
 C     Block 1.
 C     Initializations.
@@ -1705,12 +1705,12 @@ C     contained in the array wt of length neq.
 C        ddanrm=sqrt((1/neq)*sum(v(i)/wt(i))**2)
 C-----------------------------------------------------------------------
       DIMENSION V(NEQ), WT(NEQ), RPAR(*), IPAR(*)
-      DDANRM = 0.0E0
-      VMAX = 0.0E0
+      DDANRM = 0.0D0
+      VMAX = 0.0D0
       DO 10 I = 1,NEQ
 10      IF(ABS(V(I)/WT(I)) .GT. VMAX) VMAX = ABS(V(I)/WT(I))
-      IF(VMAX .LE. 0.0E0) GO TO 30
-      SUM = 0.0E0
+      IF(VMAX .LE. 0.0D0) GO TO 30
+      SUM = 0.0D0
       DO 20 I = 1,NEQ
 20      SUM = SUM + ((V(I)/WT(I))/VMAX)**2
       DDANRM = VMAX*SQRT(SUM/DFLOAT(NEQ))
@@ -1734,9 +1734,9 @@ C*****END precision > double
       TEMP1=XOUT-X
       DO 10 I=1,NEQ
          YOUT(I)=PHI(I,1)
-10       YPOUT(I)=0.0E0
+10       YPOUT(I)=0.0D0
       C=1.0E0
-      D=0.0E0
+      D=0.0D0
       GAMMA=TEMP1/PSI(1)
       DO 30 J=2,KOLDP1
          D=D*GAMMA+C/PSI(J-1)
@@ -1799,7 +1799,7 @@ C       First calculate the initial value of the derivatives
 C       of the state equations .
 C
         DO 90 I=1,NSYS
-        YPRIME(I,1)=0.0E0
+        YPRIME(I,1)=0.0D0
 90        CONTINUE
         CALL RES(T,Y(1,1),YPRIME(1,1),YPRIME(1,1),IRES,RPAR,IPAR)
         DO 91 I=1,NSYS
@@ -1812,13 +1812,13 @@ C
         IF(ICALC.EQ.0)GO TO 31
         DO 92 I=1,NSYS
         DO 92 J=2,NPAR+1
-92        Y(I,J)=0.0E0
+92        Y(I,J)=0.0D0
         IF(IDFDP.EQ.1)GO TO 100
         UROUND=D1MACH_ODE(4)
         SQUR=SQRT(UROUND)
         DO 210 I=1,NPAR
         DEL=SQUR*RPAR(I)
-        IF(RPAR(I).EQ.0.0E0)DEL=SQUR
+        IF(RPAR(I).EQ.0.0D0)DEL=SQUR
         RSAVE=RPAR(I)
         RPAR(I)=RPAR(I)+DEL
         CALL RES(T,Y(1,1),YPRIME(1,1),YPRIME(1,I+1),IRES,RPAR,IPAR)
@@ -1866,7 +1866,7 @@ C
 C
 C        zero pivot implies this column already triangularized
 C
-         IF (A(L,K) .EQ. 0.0E0) GO TO 40
+         IF (A(L,K) .EQ. 0.0D0) GO TO 40
 C
 C           interchange if necessary
 C
@@ -1898,7 +1898,7 @@ C
    60 CONTINUE
    70 CONTINUE
       IPVT(N) = N
-      IF (A(N,N) .EQ. 0.0E0) INFO = N
+      IF (A(N,N) .EQ. 0.0D0) INFO = N
       RETURN
       END
       SUBROUTINE DGESL_ODE(A,LDA,N,IPVT,B,JOB)
@@ -1997,7 +1997,7 @@ C
       DO 20 JZ = J0, J1
          I0 = M + 1 - JZ
          DO 10 I = I0, ML
-            ABD(I,JZ) = 0.0E0
+            ABD(I,JZ) = 0.0D0
    10    CONTINUE
    20 CONTINUE
    30 CONTINUE
@@ -2017,7 +2017,7 @@ C
          IF (JZ .GT. N) GO TO 50
          IF (ML .LT. 1) GO TO 50
             DO 40 I = 1, ML
-               ABD(I,JZ) = 0.0E0
+               ABD(I,JZ) = 0.0D0
    40       CONTINUE
    50    CONTINUE
 C
@@ -2029,7 +2029,7 @@ C
 C
 C        zero pivot implies this column already triangularized
 C
-         IF (ABD(L,K) .EQ. 0.0E0) GO TO 100
+         IF (ABD(L,K) .EQ. 0.0D0) GO TO 100
 C
 C           interchange if necessary
 C
@@ -2067,7 +2067,7 @@ C
   120 CONTINUE
   130 CONTINUE
       IPVT(N) = N
-      IF (ABD(M,N) .EQ. 0.0E0) INFO = N
+      IF (ABD(M,N) .EQ. 0.0D0) INFO = N
       RETURN
       END
       SUBROUTINE DGBSL_ODE(ABD,LDA,N,ML,MU,IPVT,B,JOB)
@@ -2166,7 +2166,7 @@ C*****END precision > double
       INTEGER I,INCX,INCY,IX,IY,M,MP1,N
 C
       IF(N.LE.0)RETURN
-      IF (DA .EQ. 0.0E0) RETURN
+      IF (DA .EQ. 0.0D0) RETURN
       IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
 C
 C        code for unequal increments or equal increments
@@ -2264,8 +2264,8 @@ C     jack dongarra, linpack, 3/11/78.
 C
       INTEGER I,INCX,INCY,IX,IY,M,MP1,N
 C
-      DDOT_ODE = 0.0E0
-      DTEMP = 0.0E0
+      DDOT_ODE = 0.0D0
+      DTEMP = 0.0D0
       IF(N.LE.0)RETURN
       IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
 C
@@ -2368,7 +2368,7 @@ C       corrections are to be stored.
 C
         DO 10 I=1,NSYS
         DO 10 J=2,NPAR+1
-        DELTA(I,J)=0.0E0
+        DELTA(I,J)=0.0D0
 10        CONTINUE
 C
 C        Compute the partial derivatives of f(t,y,yprime,p)
@@ -2438,7 +2438,7 @@ C        rpar(iparm) to compute the derivatives.
 C
         SQUR=SQRT(UROUND)
         DEL=SQUR*RPAR(IPARM)
-        IF(RPAR(IPARM).EQ.0.0E0)DEL=SQUR
+        IF(RPAR(IPARM).EQ.0.0D0)DEL=SQUR
         SAVE=RPAR(IPARM)
         RPAR(IPARM)=RPAR(IPARM)+DEL
         IRES=0
@@ -2468,13 +2468,13 @@ C*****END precision > double
         GO TO (10,10,20)INP1
 10        NDIF=NSYS-NALG
         DO 40 I=1,NSYS
-        FAC=0.0E0
+        FAC=0.0D0
         IF(I.LE.NDIF)FAC=1.0E0
         DELTA(I)=DELTA(I)+FAC*(YPRIME(I)-CJ*Y(I))
 40        CONTINUE
         RETURN
 20        DO 60 I=1,NSYS
-        SUM=0.0E0
+        SUM=0.0D0
         DO 70 J=1,NSYS
         SUM=SUM+EMAT(I,J)*(YPRIME(J)-CJ*Y(J))
 70        CONTINUE
