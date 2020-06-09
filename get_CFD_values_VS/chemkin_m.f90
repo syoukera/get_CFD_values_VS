@@ -154,11 +154,11 @@ module chemkin_params
         real(8) p_calc ! dyne/cm**2
         real(8) :: x_calc(kk) ! Mole fractions
         p_calc = p_cfd*10.0d0       ! Pa to dyne/cm**2
-        call ckytx(y_cfd, int_ckwk, real_ckwk, x_calc)
+        call ckytx(y_cfd, int_ckwk(ipick), real_ckwk(iprck), x_calc)
 
         call mcadif(p_calc, t_cfd, x_calc, real_tpwk, D_mix) 
         call mcacon (t_cfd, x_calc, real_tpwk, Lambda_mix)
-        call ckcpbs(t_cfd, y_cfd, int_ckwk, real_ckwk, c_p)
+        call ckcpbs(t_cfd, y_cfd, int_ckwk(ipick), real_ckwk(iprck), c_p)
 
     end subroutine get_tranport_data
 
