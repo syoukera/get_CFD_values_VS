@@ -5627,7 +5627,7 @@ C           ...EXIT
                IOPT = 1
                CALL XERRWV(
      *         '  DWNNLS( ), INSUFFICIENT STORAGE ALLOCATED FOR WORK(*),
-     * NEED LW=I1 BELOW',70,NERR,IOPT,1,LW,0,0,DUMMY,DUMMY)
+     * NEED LW=I1 BELOW',70,NERR,IOPT,1,LW,0,0,real(DUMMY),real(DUMMY))
                MODE = 2
 C     .........EXIT
                GO TO 60
@@ -5641,7 +5641,7 @@ C        ...EXIT
             IOPT = 1
             CALL XERRWV(
      *      '  DWNNLS( ), INSUFFICIENT STORAGE ALLOCATED FOR IWORK(*), N
-     *EED LIW=I1 BELOW',72,NERR,IOPT,1,LIW,0,0,DUMMY,DUMMY)
+     *EED LIW=I1 BELOW',72,NERR,IOPT,1,LIW,0,0,real(DUMMY),real(DUMMY))
             MODE = 2
 C     ......EXIT
             GO TO 60
