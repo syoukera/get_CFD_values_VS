@@ -34,6 +34,5 @@
 		<File RelativePath=".\main.f90"/>
 		<File RelativePath=".\output_m.f90"/>
 		<File RelativePath=".\senkin.f"/>
-		<File RelativePath=".\tranlib.f"/>
-		<File RelativePath=".\twopnt.f"/></Filter></Files>
+		<File RelativePath=".\tranlib.f"/></Filter></Files>
 	<Globals/></VisualStudioProject>
