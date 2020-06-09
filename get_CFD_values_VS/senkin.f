@@ -1,117 +1,117 @@
-      SUBROUTINE SENKIN (t_cfd, p_cfd, y_cfd, delta_t_cfd, tols_cfd)
-      use chemkin_params
-      use output, only: make_output
+!       SUBROUTINE SENKIN (t_cfd, p_cfd, y_cfd, delta_t_cfd, tols_cfd)
+!       use chemkin_params
+!       use output, only: make_output
 
-      IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+!       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
 
-      real(8), intent(inout) :: t_cfd
-      real(8), intent(in)    :: p_cfd
-      real(8), intent(inout) :: y_cfd(kk)
-      real(8), intent(in)    :: delta_t_cfd
-      real(8), intent(in)    :: tols_cfd(4)
-      LOGICAL LSENS
+!       real(8), intent(inout) :: t_cfd
+!       real(8), intent(in)    :: p_cfd
+!       real(8), intent(inout) :: y_cfd(kk)
+!       real(8), intent(in)    :: delta_t_cfd
+!       real(8), intent(in)    :: tols_cfd(4)
+!       LOGICAL LSENS
 
-      DATA LIN/5/, LOUT/6/, LINKCK/25/, LSAVE/7/, LIGN/9/, LREST/10/
+!       DATA LIN/5/, LOUT/6/, LINKCK/25/, LSAVE/7/, LIGN/9/, LREST/10/
 
-      COMMON /POINT/ IPICK, IPRCK, IPWT, IPWDOT, IPU, IPRD
-C
-C     DETERMINE MECHANISM SIZE
-C
-C     IPICK = 20
-C
-C     Define case: constant pressure without sensitivity analysis
-C
-      ICASE = 1
-      LSENS = .FALSE.
-C
-C         COMPUTE DASAC WORK SPACE
-C
-      IF (ICASE.LT.1 .OR. ICASE.GT.5) THEN
-         WRITE (6, '(/1X,A,/)') ' Stop, ICASE not found in SENKIN.'
-         STOP
-      ELSEIF (ICASE .GT. 3) THEN
-         NSYS = KK
-      ELSE
-         NSYS  = KK + 1
-      ENDIF
-C
-      IF (LSENS) THEN
-         NEQ    = NSYS * (II + 1)
-         LSDAS  = NSYS
-      ELSE
-         NEQ = NSYS
-         LSDAS  = 1
-      ENDIF
-      LIDAS  = 20 + NEQ
-      LRDAS  = 40 + NEQ*9 + NSYS*NSYS
-C
-C         SET RPAR POINTERS
-C     NOTE: MUST HAVE IPRD 1ST IN RPAR!
-C
-      IPRD   = 1
-      IPRCK  = IPRD  + II
-      IPWT   = IPRCK + len_real_cklen
-      IPWDOT = IPWT  + KK
-      IPU    = IPWDOT+ KK
-      IPTOT  = IPU   + KK
-C
-C         APPORTION REAL WORK SPACE
-C
-      NRPAR  = 1
-      NRDAS  = NRPAR + IPTOT
-      NSDAS  = NRDAS + LRDAS
-      NATOL  = NSDAS + LSDAS
-      NRTOL  = NATOL + NEQ
-      NXMOL  = NRTOL + NEQ
-      NZ     = NXMOL + KK
-      NZP    = NZ    + NEQ
-      LRTOT  = NZP   + NEQ
-C
-C        APPORTION INTEGER WORK SPACE
-C
-      NIPAR  = 1
-      NIDAS  = NIPAR + len_int_cklen + IPICK
-      LITOT  = NIDAS + LIDAS
-C
-C        APPORTION CHARACTER WORK SPACE
-C
-      IPCCK = 1
-      NKSYM = IPCCK + len_char_cklen
-      LCTOT = NKSYM + KK
-C
-C          CHECK FOR SUFFICIENT SPACE
-C
-      if (make_output) then
-            WRITE (6, 7020) len_int_ckwk, LITOT, len_real_ckwk, LRTOT, 
-     1                      len_char_ckwk, LCTOT
-      endif
-C
-      IF (LRTOT.GT.len_real_ckwk .OR. LITOT.GT.len_int_ckwk 
-     1                           .OR. LCTOT.GT.len_char_ckwk) THEN
-         WRITE (6, *) '  Stop, not enough work space provided.'
-         STOP
-      ENDIF
-C
-C          GO TO MAIN LEVEL
-C
-      CALL BEGIN (NSYS, NEQ, ICASE, II, KK, len_int_cklen, 
-     1            len_real_cklen, len_char_cklen, unit_cklink,
-     2            LIN, LOUT, LSAVE, LIGN, LREST, LSENS, LIDAS, LRDAS,
-     3            LSDAS, int_ckwk(NIDAS), real_ckwk(NRDAS), 
-     4            real_ckwk(NSDAS), real_ckwk(NRPAR), int_ckwk(NIPAR), 
-     5            real_ckwk(NZ), real_ckwk(NZP), real_ckwk(NRTOL), 
-     6            real_ckwk(NATOL), real_ckwk(NXMOL), 
-     6            char_ckwk(NKSYM), char_ckwk(IPCCK),
-     6            p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
-C
- 7020 FORMAT (/, '                Working Space Requirements',
-     1        /, '                 Provided        Required ',
-     2        /, ' Integer  ', 2I15,
-     3        /, ' Real     ', 2I15,
-     4        /, ' Character', 2I15, /)
+!       COMMON /POINT/ IPICK, IPRCK, IPWT, IPWDOT, IPU, IPRD
+! C
+! C     DETERMINE MECHANISM SIZE
+! C
+! C     IPICK = 20
+! C
+! C     Define case: constant pressure without sensitivity analysis
+! C
+!       ICASE = 1
+!       LSENS = .FALSE.
+! C
+! C         COMPUTE DASAC WORK SPACE
+! C
+!       IF (ICASE.LT.1 .OR. ICASE.GT.5) THEN
+!          WRITE (6, '(/1X,A,/)') ' Stop, ICASE not found in SENKIN.'
+!          STOP
+!       ELSEIF (ICASE .GT. 3) THEN
+!          NSYS = KK
+!       ELSE
+!          NSYS  = KK + 1
+!       ENDIF
+! C
+!       IF (LSENS) THEN
+!          NEQ    = NSYS * (II + 1)
+!          LSDAS  = NSYS
+!       ELSE
+!          NEQ = NSYS
+!          LSDAS  = 1
+!       ENDIF
+!       LIDAS  = 20 + NEQ
+!       LRDAS  = 40 + NEQ*9 + NSYS*NSYS
+! C
+! C         SET RPAR POINTERS
+! C     NOTE: MUST HAVE IPRD 1ST IN RPAR!
+! C
+!       IPRD   = 1
+!       IPRCK  = IPRD  + II
+!       IPWT   = IPRCK + len_real_cklen
+!       IPWDOT = IPWT  + KK
+!       IPU    = IPWDOT+ KK
+!       IPTOT  = IPU   + KK
+! C
+! C         APPORTION REAL WORK SPACE
+! C
+!       NRPAR  = 1
+!       NRDAS  = NRPAR + IPTOT
+!       NSDAS  = NRDAS + LRDAS
+!       NATOL  = NSDAS + LSDAS
+!       NRTOL  = NATOL + NEQ
+!       NXMOL  = NRTOL + NEQ
+!       NZ     = NXMOL + KK
+!       NZP    = NZ    + NEQ
+!       LRTOT  = NZP   + NEQ
+! C
+! C        APPORTION INTEGER WORK SPACE
+! C
+!       NIPAR  = 1
+!       NIDAS  = NIPAR + len_int_cklen + IPICK
+!       LITOT  = NIDAS + LIDAS
+! C
+! C        APPORTION CHARACTER WORK SPACE
+! C
+!       IPCCK = 1
+!       NKSYM = IPCCK + len_char_cklen
+!       LCTOT = NKSYM + KK
+! C
+! C          CHECK FOR SUFFICIENT SPACE
+! C
+!       if (make_output) then
+!             WRITE (6, 7020) len_int_ckwk, LITOT, len_real_ckwk, LRTOT, 
+!      1                      len_char_ckwk, LCTOT
+!       endif
+! C
+!       IF (LRTOT.GT.len_real_ckwk .OR. LITOT.GT.len_int_ckwk 
+!      1                           .OR. LCTOT.GT.len_char_ckwk) THEN
+!          WRITE (6, *) '  Stop, not enough work space provided.'
+!          STOP
+!       ENDIF
+! C
+! C          GO TO MAIN LEVEL
+! C
+!       CALL BEGIN (NSYS, NEQ, ICASE, II, KK, len_int_cklen, 
+!      1            len_real_cklen, len_char_cklen, unit_cklink,
+!      2            LIN, LOUT, LSAVE, LIGN, LREST, LSENS, LIDAS, LRDAS,
+!      3            LSDAS, int_ckwk(NIDAS), real_ckwk(NRDAS), 
+!      4            real_ckwk(NSDAS), real_ckwk(NRPAR), int_ckwk(NIPAR), 
+!      5            real_ckwk(NZ), real_ckwk(NZP), real_ckwk(NRTOL), 
+!      6            real_ckwk(NATOL), real_ckwk(NXMOL), 
+!      6            char_ckwk(NKSYM), char_ckwk(IPCCK),
+!      6            p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
+! C
+!  7020 FORMAT (/, '                Working Space Requirements',
+!      1        /, '                 Provided        Required ',
+!      2        /, ' Integer  ', 2I15,
+!      3        /, ' Real     ', 2I15,
+!      4        /, ' Character', 2I15, /)
 
-      RETURN
-      END
+!       RETURN
+!       END
 C
 C---------------------------------------------------------------
 C
