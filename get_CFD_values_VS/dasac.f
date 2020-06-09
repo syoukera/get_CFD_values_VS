@@ -23,7 +23,8 @@ C
 C     where   W(t):=dy/dp
 C--------------------------------------------------------------------
       LOGICAL DONE
-      EXTERNAL RES,JAC,DRES,DFDYP
+      EXTERNAL RES,DRES
+C     EXTERNAL JAC,DFDYP
       DIMENSION Y(*), YPRIME(*), INFO(15),ISEN(5)
       DIMENSION RWORK(*), IWORK(*), SWORK(*), RTOL(*), ATOL(*)
       DIMENSION RPAR(*), IPAR(*)
@@ -917,7 +918,8 @@ C*****END precision > double
       DIMENSION DTEM(*), EMAT(*), WM(*), IWM(*)
       DIMENSION PSI(*), ALPHA(*), BETA(*), GAMMA(*), SIGMA(*)
       DIMENSION RPAR(*), IPAR(*)
-      EXTERNAL RES,JAC,DRES,DFDYP
+      EXTERNAL RES,DRES
+C     EXTERNAL JAC,DFDYP
       COMMON/DDA001/NPD,NTEMP,
      *   LML,LMU,LMXORD,LMTYPE,
      *   LNST,LNRE,LNJE,LETF,LCTF,LIPVT
@@ -2357,7 +2359,8 @@ C*****precision > double
 C*****END precision > double
         DIMENSION Y(NSYS,*), YPRIME(NSYS,*), E(NSYS,*), DELTA(NSYS,*)
         DIMENSION EMAT(*), WM(*), RPAR(*), IWM(*), DTEM(*), IPAR(*)
-        EXTERNAL RES,DRES,DFDYP
+        EXTERNAL RES,DRES
+C       EXTERNAL DFDYP
         COMMON/DDA001/NPD,NTEMP,
      *    LML,LMU,LMXORD,LMTYPE,
      *    LNST,LNRE,LNJE,LEFT,LCTF,LIPVT
@@ -2391,8 +2394,8 @@ C
 C         Now compute the right hand side of the sensitivity
 C        equations. Store the result in delta(i,j).
 C
-        IF(INDEX.EQ.2)
-     *        CALL DFDYP(T,Y(1,1),YPRIME(1,1),EMAT,RPAR,IPAR)
+C      IF(INDEX.EQ.2)
+C    *        CALL DFDYP(T,Y(1,1),YPRIME(1,1),EMAT,RPAR,IPAR)
         DO 60 IPARM=1,NPAR
         CALL DDSRHS(T,Y(1,IPARM+1),YPRIME(1,IPARM+1),NSYS,EMAT,
      *  DELTA(1,IPARM+1),CJ,RPAR,IPAR)
