@@ -3,6 +3,7 @@
 program test_main
       use chemkin_params, only: initialize_chemkin_workarray, &
                                 get_tranport_data, get_next_TY
+      use senkin_params, only: timeloop, z
       use output, only: make_output
 
       !   ------- user input section ---------
@@ -55,11 +56,69 @@ program test_main
       
       !   ------- chemistry section ---------
 
-      call get_next_TY(p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
-
+      !call get_next_TY(p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
+      !
+      !write(6, *) 'temperature [K]'
+      !write(6, *) t_cfd
+      !write(6, *) 'mass fractions [-]'
+      !write(6, *) y_cfd
+      
+      call timeloop()
+      
       write(6, *) 'temperature [K]'
-      write(6, *) t_cfd
-      write(6, *) 'mole fractions [-]'
-      write(6, *) y_cfd
+      write(6, *) z(1)
+      write(6, *) 'mass fractions [-]'
+      write(6, *) z(2:)
 
 end program test_main
+
+!subroutine compair_rconp(t, y)
+!    use chemkin_params, only: kk, nsys, int_ckwk, real_ckwk
+!    use senkin_params, only: rconp_re
+!    implicit none
+!    
+!    real(8), intent(in) :: t
+!    real(8), intent(in) :: y(kk)
+!    
+!    real(8) :: time
+!    real(8) :: z(nsys)
+!    real(8) :: zp(nsys)
+!    real(8) :: delta(nsys)
+!    real(8) :: delta_(nsys)
+!    integer :: ires = 1
+!    integer :: i
+!    
+!    time = 0.0d0
+!    z(1) = t
+!    z(2:) = y
+!    
+!    call rconp_re(time, z, zp, delta, ires, real_ckwk, int_ckwk)
+!    call rconp(time, z, zp, delta_, ires, real_ckwk, int_ckwk)
+!    
+!    do i = 1, nsys
+!        print *, i, delta(i), delta_(i)
+!    end do
+!    
+!end subroutine compair_rconp
+!    
+!subroutine get_wdot(t, y)
+!    use chemkin_params, only: int_ckwk, real_ckwk, kk
+!    implicit none
+!    
+!    real(8), intent(in) :: t
+!    real(8), intent(in) :: y(kk)
+!    
+!    real(8) :: p
+!    real(8) :: wdot(kk)
+!    
+!    integer :: i
+!    
+!    p = 1.01325d5*40*10
+!    
+!    call CKWYP  (p, t, Y, int_ckwk, real_ckwk, wdot)
+!    
+!    do i = 1, kk
+!        print *, i, wdot(i)
+!    end do
+!    
+!end subroutine get_wdot

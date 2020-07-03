@@ -32,7 +32,6 @@
 		<File RelativePath=".\dasac.f"/>
 		<File RelativePath=".\dmath.f"/>
 		<File RelativePath=".\main.f90"/>
-		<File RelativePath=".\output_m.f90"/>
-		<File RelativePath=".\senkin.f"/>
+		<File RelativePath=".\senkin_m.f90"/>
 		<File RelativePath=".\tranlib.f"/></Filter></Files>
 	<Globals/></VisualStudioProject>
